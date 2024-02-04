@@ -1,0 +1,44 @@
+POST http://localhost:8080/api/assets
+Content-Type: application/json
+
+{
+   "assetname": "acer",
+  "assetcategoryname": "laptops"
+}
+
+
+###
+GET http://localhost:8080/api/assets
+
+###
+PUT http://localhost:8080/api/assets/4
+Content-Type: application/json
+
+{
+   "name": "siva" 
+}
+
+###
+DELETE http://localhost:8080/api/employees/4
+
+###
+PUT http://localhost:8080/api/assets/issue/1/3
+Content-Type: application/json
+
+{
+   "empid": "3" ,
+   "assetid": "1"
+}
+
+###
+GET http://localhost:8080/api/employees
+
+
+###
+PUT http://localhost:8080/api/assets/return/1/3
+Content-Type: application/json
+
+{
+   "empid": null ,
+   "assetid": null
+}

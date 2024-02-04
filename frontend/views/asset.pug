@@ -1,0 +1,89 @@
+// Include the Bootstrap CSS library (you can replace this with any other CSS framework or your custom styles)
+link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+
+block content
+  style.
+    body {
+      background: linear-gradient(to right, #4e54c8, #8f94fb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    form {
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+  h1(style="text-align: center; margin-bottom: 30px; color: white;") Asset Management System
+
+  // Form for Creating a new Asset
+  form(action="http://localhost:8080/api/assets", method="post" class="mt-4")
+    .form-group
+      label(for="assetname") Asset Name:
+      input(type="text", name="assetname", required, class="form-control col-4", style="background-color: #f0f0f0;")
+    .form-group
+      label(for="assetcategoryname") Asset Category Name:
+      input(type="text", name="assetcategoryname", required, class="form-control col-4", style="background-color: #f0f0f0;")
+    .form-group
+      label(for="obsolete") Obsolete:
+      input(type="checkbox", name="obsolete", class="form-check-input")
+    .form-group
+      label(for="empid") Employee ID:
+      input(type="number", name="empid", class="form-control col-4", style="background-color: #f0f0f0;")
+    button(type="submit" class="btn btn-primary mt-2") Add Asset
+
+  // Form for Searching by Asset ID
+  form(action="http://localhost:8080/api/assets", method="get" class="mt-4")
+    .form-group
+      label(for="searchId") Search Asset by ID:
+      input(type="number", name="id", required, class="form-control col-4", style="background-color: #f0f0f0;")
+    button(type="submit" class="btn btn-secondary mt-2") Search
+
+  script.
+    document.addEventListener('DOMContentLoaded', function () {
+      fetch('http://localhost:8080/api/assets')
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(assets) {
+          console.log(assets.length);
+          let tableBody = document.querySelector('tbody');
+
+          // Check if tbody element exists, create one if not
+          if (!tableBody) {
+            const table = document.querySelector('table');
+            tableBody = document.createElement('tbody');
+            table.appendChild(tableBody);
+          }
+
+          tableBody.innerHTML = '';
+
+          if (assets.length > 0) {
+            assets.forEach(function(asset) {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${asset.assetname}</td>
+                <td>${asset.assetcategoryname}</td>
+                <td>${asset.obsolete ? 'Yes' : 'No'}</td>
+                <td>${asset.empid}</td>
+                <td>
+                  <a href="/edit/${asset.id}" class="btn btn-warning btn-sm">Edit</a>
+                  <a href="/delete/${asset.id}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+              `;
+              tableBody.appendChild(row);
+            });
+          } else {
+            const noAssetsMessage = document.createElement('p');
+            noAssetsMessage.textContent = 'No Assets found.';
+            document.body.appendChild(noAssetsMessage);
+          }
+        })
+        .catch(function(error) {
+          console.error('Error fetching assets:', error);
+        });
+    });

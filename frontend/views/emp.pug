@@ -1,0 +1,71 @@
+
+block content
+  h1 Employee Management System
+
+  //- Form for Creating a new Employee
+  form(action="http://localhost:8080/api/employees", method="post")
+    label(for="name") Name:
+    input(type="text", name="name", required)
+    br
+    label(for="teamname") Team Name:
+    input(type="text", name="teamname", required)
+    br
+    label(for="status") Status:
+    input(type="text", name="status", required)
+    br
+    label(for="assetid") Asset ID:
+    input(type="number", name="assetid", required)
+    br
+    button(type="submit") Add Employee
+
+  //- Form for Searching by ID
+  
+  form(action="http://localhost:8080/api/employees", method="get")
+    label(for="searchId") Search Employee by ID:
+    input(type="number", name="id", required)
+    button(type="submit") Search
+
+script.
+  document.addEventListener('DOMContentLoaded', function () {
+    fetch('http://localhost:8080/api/employees')
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(employees) {
+        console.log(employees.length);
+        let tableBody = document.querySelector('tbody');
+
+        // Check if tbody element exists, create one if not
+        if (!tableBody) {
+          const table = document.querySelector('table');
+          tableBody = document.createElement('tbody');
+          table.appendChild(tableBody);
+        }
+
+        tableBody.innerHTML = '';
+
+        if (employees.length > 0) {
+          employees.forEach(function(employee) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${employee.name}</td>
+              <td>${employee.teamname}</td>
+              <td>${employee.status}</td>
+              <td>${employee.assetid}</td>
+              <td>
+                <a href="/edit/${employee.id}">Edit</a>
+                <a href="/delete/${employee.id}">Delete</a>
+              </td>
+            `;
+            tableBody.appendChild(row);
+          });
+        } else {
+          const noEmployeesMessage = document.createElement('p');
+          noEmployeesMessage.textContent = 'No Employees found.';
+          document.body.appendChild(noEmployeesMessage);
+        }
+      })
+      .catch(function(error) {
+        console.error('Error fetching employees:', error);
+      });
+  });

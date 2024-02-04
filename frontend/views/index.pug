@@ -1,0 +1,20 @@
+doctype html
+html
+  head
+    title Index Page
+
+  body
+    h1 Welcome to the Index Page
+
+    button(type="button", onclick="openPage('asset')") Asset
+    button(type="button", onclick="openPage('employee')") Employee
+
+    script.
+      function openPage(page) {
+        
+        if (page === 'asset') {
+          window.location.href = '/asset';
+        } else if (page === 'employee') {
+          window.location.href = '/emp';
+        }
+      }
